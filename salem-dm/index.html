@@ -1048,38 +1048,36 @@ function speakSequence(lines, waits, idx) {
   utterance.lang = 'zh-CN';                      // 用中文发音
   utterance.rate = 0.9;                          // 语速 0.9 倍
 
+  var ended = false;
+  function next() {
+    if (ended) return;
+    ended = true;
+    if (isInteractive) {
+      showPlayerGrid(playerCount);
+      setTimeout(function () {
+        hidePlayerGrid();
+        speakSequence(lines, waits, idx + 1);
+      }, delay);
+    } else {
+      setTimeout(function () { speakSequence(lines, waits, idx + 1); }, delay);
+    }
+  }
+
   // 念完后的回调函数
-  utterance.onend = () => {
-    if (isInteractive) {
-      // 交互模式：显示编号面板，同时启动计时器，女巫在计时内选人
-      // 计时走完后再播下一句，选人只是标记目标，不提前结束计时
-      showPlayerGrid(playerCount);
-      setTimeout(() => {
-        hidePlayerGrid();
-        speakSequence(lines, waits, idx + 1);
-      }, delay);
-    } else {
-      // 普通模式：等用户设的秒数，然后播下一句
-      setTimeout(() => speakSequence(lines, waits, idx + 1), delay);
-    }
-  };
+  utterance.onend = next;
 
-  // 万一念出错了（比如语音引擎炸了），也别卡住，跳过继续
-  utterance.onerror = () => {
-    if (isInteractive) {
-      showPlayerGrid(playerCount);
-      setTimeout(() => {
-        hidePlayerGrid();
-        speakSequence(lines, waits, idx + 1);
-      }, delay);
-    } else {
-      setTimeout(() => speakSequence(lines, waits, idx + 1), delay);
-    }
-  };
+  // 万一念出错了，也别卡住，跳过继续
+  utterance.onerror = next;
 
-  // 清掉可能还在念的旧语音，然后念新的
+  // Android 兼容修复：cancel 后需要延迟再 speak，否则语音会被吞掉
+  // 同时加兜底定时器，防止 Android 上 onend 不触发导致卡住
   speechSynthesis.cancel();
-  speechSynthesis.speak(utterance);
+  setTimeout(function () {
+    speechSynthesis.speak(utterance);
+    // 兜底：估算语音时长（中文约 3 字/秒），超时 3 倍后强制继续
+    var fallback = Math.max(5000, text.length * 1000);
+    setTimeout(next, fallback);
+  }, 80);
 }
 
 /**
@@ -1154,7 +1152,7 @@ function flipRevealCard() {
   utter.lang = 'zh-CN';
   utter.rate = 0.9;
   speechSynthesis.cancel();
-  speechSynthesis.speak(utter);
+  setTimeout(function () { speechSynthesis.speak(utter); }, 80);
 }
 
 /**
