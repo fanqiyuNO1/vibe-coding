@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>猎巫镇 DM — 原型图总览</title>
+<style>
+/*
+ * ===============================
+ * 原型图总览页 — 将所有 5 个界面并排展示
+ * 复用 index.html 的配色变量和设计风格
+ * 仅作静态展示，无交互逻辑
+ * ===============================
+ */
+
+/* 全局 CSS 变量 — 与 index.html 保持一致 */
+:root {
+  --page: #e8e4db;
+  --card: #f0ece4;
+  --bg-input: #e5e0d6;
+  --ink: #383026;
+  --ink-light: #6b6052;
+  --ink-dim: #a09885;
+  --accent: #b08a3a;
+  --border: rgba(0,0,0,0.06);
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", -apple-system, sans-serif;
+  background: #d5d1c7;
+  color: var(--ink);
+  padding: 40px 24px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 页面标题区 */
+.prototype-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.prototype-header h1 {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: 6px;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+
+.prototype-header p {
+  font-size: 13px;
+  color: var(--ink-dim);
+  letter-spacing: 3px;
+}
+
+/* 弹性网格容器 — 自动换行，居中对齐 */
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+  justify-content: center;
+  max-width: 1700px;
+  margin: 0 auto;
+}
+
+/* 手机外壳 — 340×640，圆角 + 深色边框模拟手机 */
+.screen-mock {
+  width: 340px;
+  height: 640px;
+  background: var(--page);
+  border-radius: 28px;
+  border: 1px solid rgba(0,0,0,0.08);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.10), 0 0 0 6px #3b3229, 0 0 0 8px #50473e;
+  position: relative;
+}
+
+/* 模拟刘海屏 notch */
+.screen-mock .notch {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 20px;
+  background: #3b3229;
+  border-radius: 0 0 14px 14px;
+  z-index: 10;
+}
+
+/* 手机上方标签 */
+.mock-label {
+  position: absolute;
+  top: -32px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: 2px;
+  background: #d5d1c7;
+  padding: 2px 12px;
+  white-space: nowrap;
+}
+
+/* 手机内部内容区 */
+.mock-inner {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 36px 24px 24px 24px;
+  position: relative;
+}
+
+/* ── ① 首页 ── */
+.mock-home {
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+}
+
+.mock-home .home-icon { font-size: 48px; margin-bottom: 12px; opacity: 0.85; }
+.mock-home .home-title {
+  font-size: 28px; font-weight: 800; letter-spacing: 6px; color: var(--ink);
+}
+.mock-home .home-subtitle {
+  font-size: 12px; color: var(--ink-dim); letter-spacing: 4px; font-weight: 500;
+}
+.mock-home .divider {
+  width: 28px; height: 1px; background: var(--ink-dim); margin: 10px 0; opacity: 0.4;
+}
+.mock-home .hint {
+  font-size: 11px; color: var(--ink-dim); letter-spacing: 3px; margin-top: 28px; opacity: 0.5;
+}
+
+/* 首页底部箭头提示 */
+.mock-arrow {
+  font-size: 12px;
+  color: var(--ink-dim);
+  margin-top: 60px;
+  opacity: 0.3;
+}
+
+/* ── 返回按钮（静态展示） ── */
+.back-btn {
+  align-self: flex-start;
+  background: none;
+  border: none;
+  color: var(--ink-light);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 4px 0;
+  cursor: default;
+  margin-bottom: 20px;
+  font-family: inherit;
+}
+
+/* ── ② 阶段选择页 ── */
+.mock-phase {
+  justify-content: flex-start;
+  gap: 0;
+}
+.mock-phase .back-btn {
+  margin-bottom: 10px;
+}
+.mock-phase .phase-cards-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 40px;
+  padding: 0 4px;
+}
+
+.phase-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 32px 28px;
+  text-align: center;
+}
+
+.phase-card .p-icon { font-size: 36px; margin-bottom: 10px; display: block; }
+.phase-card .p-label { font-size: 20px; font-weight: 700; letter-spacing: 3px; margin-bottom: 6px; }
+.phase-card .p-desc { font-size: 11px; color: var(--ink-dim); }
+
+/* ── ③④ 编辑页 ── */
+.screen-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+.screen-header .h-icon { font-size: 18px; }
+.screen-header .h-title { font-size: 18px; font-weight: 700; letter-spacing: 2px; }
+
+/* 可滚动台词列表 */
+.edit-list {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 4px 0 12px 0;
+}
+
+.edit-item {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.edit-item .line-num { font-size: 10px; color: var(--ink-dim); font-weight: 600; letter-spacing: 2px; }
+.edit-item .text-disp {
+  background: var(--bg-input);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  font-size: 13px;
+  color: var(--ink);
+}
+.edit-item .wait-row {
+  display: flex; align-items: center; gap: 6px;
+}
+.edit-item .wait-label { font-size: 11px; color: var(--ink-dim); }
+.edit-item .wait-val {
+  background: var(--bg-input);
+  border-radius: var(--radius-sm);
+  padding: 5px 10px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent);
+  min-width: 44px;
+  text-align: center;
+}
+.edit-item .wait-suffix { font-size: 11px; color: var(--ink-dim); }
+
+/* 开始播报按钮（静态） */
+.start-btn {
+  width: 100%;
+  padding: 13px;
+  border: none;
+  border-radius: var(--radius-md);
+  background: var(--accent);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  font-family: inherit;
+  margin-top: 4px;
+}
+
+/* ── ⑤ 播报中 ── */
+.mock-broadcast {
+  justify-content: center;
+  align-items: center;
+}
+.mock-broadcast .bc-icon {
+  font-size: 48px;
+  margin-bottom: 24px;
+  opacity: 0.75;
+}
+.mock-broadcast .bc-label {
+  font-size: 18px;
+  letter-spacing: 6px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.mock-broadcast .bc-sub {
+  font-size: 12px;
+  color: var(--ink-dim);
+  letter-spacing: 4px;
+}
+
+/* ── 交互流程图区域 ── */
+.flow-section {
+  max-width: 1700px;
+  margin: 40px auto 0;
+  background: rgba(240,236,228,0.5);
+  border-radius: 16px;
+  padding: 24px 32px;
+  text-align: center;
+}
+
+.flow-section h3 {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  margin-bottom: 16px;
+  color: var(--ink-light);
+}
+
+.flow-diagram {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  letter-spacing: 1px;
+}
+
+.flow-node {
+  background: var(--card);
+  border-radius: var(--radius-sm);
+  padding: 8px 16px;
+  font-weight: 600;
+  color: var(--ink);
+  font-size: 12px;
+}
+
+.flow-arrow {
+  color: var(--ink-dim);
+  font-size: 16px;
+}
+</style>
+</head>
+<body>
+
+<div class="prototype-header">
+  <h1>猎巫镇 DM 语音播报器</h1>
+  <p>原型图 · 全部界面一览</p>
+</div>
+
+<div class="grid">
+
+  <!-- ① 首页 — 标题 + 点击提示 -->
+  <div class="screen-mock">
+    <div class="notch"></div>
+    <div class="mock-label">① 首页</div>
+    <div class="mock-inner mock-home">
+      <div class="home-icon">🧙</div>
+      <div class="home-title">猎 巫 镇</div>
+      <div class="home-subtitle">Salem 1692</div>
+      <div class="divider"></div>
+      <div class="hint">轻 触 屏 幕 开 始</div>
+      <div class="mock-arrow">↓ 点击进入 ↓</div>
+    </div>
+  </div>
+
+  <!-- ② 阶段选择 — 返回首页 + 黎明/夜晚两张卡片 -->
+  <div class="screen-mock">
+    <div class="notch"></div>
+    <div class="mock-label">② 阶段选择</div>
+    <div class="mock-inner mock-phase">
+      <div class="back-btn">← 返回首页</div>
+      <div class="phase-cards-group">
+        <div class="phase-card">
+          <span class="p-icon">🌅</span>
+          <div class="p-label">黎明阶段</div>
+          <div class="p-desc">5 句台词 · 女巫放置黑猫</div>
+        </div>
+        <div class="phase-card">
+          <span class="p-icon">🌙</span>
+          <div class="p-label">夜晚阶段</div>
+          <div class="p-desc">7 句台词 · 女巫杀人 &amp; 警长保护</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ③ 黎明编辑页 — 5 句台词 + 等待秒数 + 开始播报按钮 -->
+  <div class="screen-mock">
+    <div class="notch"></div>
+    <div class="mock-label">③ 黎明编辑</div>
+    <div class="mock-inner" style="padding-top:42px;">
+      <div class="back-btn">← 返回选择</div>
+      <div class="screen-header">
+        <span class="h-icon">🌅</span>
+        <span class="h-title">黎明阶段</span>
+      </div>
+      <div class="edit-list">
+        <div class="edit-item">
+          <div class="line-num">第 1 句</div>
+          <div class="text-disp">所有玩家请闭眼</div>
+          <div class="wait-row">
+            <span class="wait-label">⏱ 等待</span>
+            <span class="wait-val">2</span>
+            <span class="wait-suffix">秒</span>
+          </div>
+        </div>
+        <div class="edit-item">
+          <div class="line-num">第 2 句</div>
+          <div class="text-disp">女巫请睁眼，互相确认身份</div>
+          <div class="wait-row">
+            <span class="wait-label">⏱ 等待</span>
+            <span class="wait-val">2</span>
+            <span class="wait-suffix">秒</span>
+          </div>
+        </div>
+        <div class="edit-item">
+          <div class="line-num">第 3 句</div>
+          <div class="text-disp">女巫请将黑猫放在任意一名玩家面前</div>
+          <div class="wait-row">
+            <span class="wait-label">⏱ 等待</span>
+            <span class="wait-val" style="color:#d4855e;">5</span>
+            <span class="wait-suffix">秒</span>
+          </div>
+        </div>
+        <div class="edit-item">
+          <div class="line-num">第 4 句</div>
+          <div class="text-disp">女巫请闭眼</div>
+          <div class="wait-row">
+            <span class="wait-label">⏱ 等待</span>
+            <span class="wait-val">1.5</span>
+            <span class="wait-suffix">秒</span>
+          </div>
+        </div>
+        <div class="edit-item">
+          <div class="line-num">第 5 句</div>
+          <div class="text-disp">所有玩家请睁眼</div>
+          <div class="wait-row">
+            <span class="wait-label">⏱ 等待</span>
+            <span class="wait-val">0</span>
+            <span class="wait-suffix">秒</span>
+          </div>
+        </div>
+      </div>
+      <div class="start-btn">▶ 开 始 播 报</div>
+    </div>
+  </div>
+
+  <!-- ④ 夜晚编辑页 — 7 句台词 + 等待秒数 + 开始播报按钮 -->
+  <div class="screen-mock">
+    <div class="notch"></div>
+    <div class="mock-label">④ 夜晚编辑</div>
+    <div class="mock-inner" style="padding-top:42px;">
+      <div class="back-btn">← 返回选择</div>
+      <div class="screen-header">
+        <span class="h-icon">🌙</span>
+        <span class="h-title">夜晚阶段</span>
+      </div>
+      <div class="edit-list">
+        <div class="edit-item">
+          <div class="line-num">第 1 句</div>
+          <div class="text-disp">天黑请闭眼</div>
+          <div class="wait-row">
+            <span class="wait-label">⏱ 等待</span>
+            <span class="wait-val">2</span>
+            <span class="wait-suffix">秒</span>
+          </div>
+        </div>
+        <div class="edit-item">
+          <div class="line-num">第 2 句</div>
+          <div class="text-disp">女巫请睁眼，选择今晚要杀害的角色</div>
+          <div class="wait-row">
+            <span class="wait-label">⏱ 等待</span>
+            <span class="wait-val" style="color:#d4855e;">10</span>
+            <span class="wait-suffix">秒</span>
+          </div>
+        </div>
+        <div class="edit-item">
+          <div class="line-num">第 3 句</div>
+          <div class="text-disp">女巫请闭眼</div>
+          <div class="wait-row">
+            <span class="wait-label">⏱ 等待</span>
+            <span class="wait-val">1.5</span>
+            <span class="wait-suffix">秒</span>
+          </div>
+        </div>
+        <div class="edit-item">
+          <div class="line-num">第 4 句</div>
+          <div class="text-disp">警长请睁眼</div>
+          <div class="wait-row">
+            <span class="wait-label">⏱ 等待</span>
+            <span class="wait-val">1</span>
+            <span class="wait-suffix">秒</span>
+          </div>
+        </div>
+        <div class="edit-item">
+          <div class="line-num">第 5 句</div>
+          <div class="text-disp">警长请选择要保护的人</div>
+          <div class="wait-row">
+            <span class="wait-label">⏱ 等待</span>
+            <span class="wait-val" style="color:#d4855e;">5</span>
+            <span class="wait-suffix">秒</span>
+          </div>
+        </div>
+        <div class="edit-item">
+          <div class="line-num">第 6 句</div>
+          <div class="text-disp">警长请闭眼</div>
+          <div class="wait-row">
+            <span class="wait-label">⏱ 等待</span>
+            <span class="wait-val">2</span>
+            <span class="wait-suffix">秒</span>
+          </div>
+        </div>
+        <div class="edit-item">
+          <div class="line-num">第 7 句</div>
+          <div class="text-disp">天亮了</div>
+          <div class="wait-row">
+            <span class="wait-label">⏱ 等待</span>
+            <span class="wait-val">0</span>
+            <span class="wait-suffix">秒</span>
+          </div>
+        </div>
+      </div>
+      <div class="start-btn">▶ 开 始 播 报</div>
+    </div>
+  </div>
+
+  <!-- ⑤ 播报中 — 纯语音状态，只显示图标 + "播报中" -->
+  <div class="screen-mock">
+    <div class="notch"></div>
+    <div class="mock-label">⑤ 播报中</div>
+    <div class="mock-inner mock-broadcast">
+      <div class="bc-icon">🔊</div>
+      <div class="bc-label">播 报 中</div>
+      <div class="bc-sub">请保持安静</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- 交互流程图 -->
+<div class="flow-section">
+  <h3>📱 交互流程</h3>
+  <div class="flow-diagram">
+    <span class="flow-node">① 首页</span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-node">② 阶段选择</span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-node">③/④ 编辑页</span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-node">⑤ 播报中</span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-node">自动返回阶段选择</span>
+  </div>
+</div>
+
+</body>
+</html>
